@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const ObjectId = require('mongodb').ObjectId;
+var ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 
 //middleware
@@ -45,15 +45,24 @@ async function run() {
         })
 
         app.put('/todo/:id', async (req, res) => {
-            const id = req.params.id;
+            const id = (req.params.id).toString();
             const updatedItem = req.body;
-            const filter = { _id: ObjectId(id) };
+            const filter = {_id: ObjectId(id)};
             const updateDoc = {
                 $set: {
                     task: updatedItem.task
                 },
             };
             const result = await todoCollection.updateOne(filter, updateDoc);
+            res.send(result);
+
+        })
+
+        app.delete('/todo/:id', async (req, res) => {
+            const id = (req.params.id).toString();
+            console.log("deleted id", id);
+            const filter = {_id: new ObjectId(id)};
+            const result = await todoCollection.deleteOne({_id: ObjectId(id)});
             res.send(result);
 
         })
