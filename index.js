@@ -27,6 +27,10 @@ async function run() {
             const todos = await todoCollection.find().toArray();
             res.send(todos);
         })
+        app.get('/complete', async (req, res) => {
+            const completed = await completedCollection.find().toArray();
+            res.send(completed);
+        })
 
        
         app.post('/todo', async (req, res) => {
